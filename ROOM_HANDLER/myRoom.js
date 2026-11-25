@@ -1,6 +1,6 @@
 import express from "express";
 import RequestRoom from "../DB/requestRoomDb.js";
-import UserCampus from "../DB/userCampusDb.js";
+import UserCampus from "../DB/userDB.js";
 
 const router = express.Router();
 
