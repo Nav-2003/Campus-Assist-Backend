@@ -17,6 +17,7 @@ import verify_otp from "./otpSystem/verifyOtp.js";
 import forget from "./AUTH_HANDLER/forgetPassword.js";
 
 const app = express();
+const PORT = Number(process.env.PORT || 3000);
 
 const localNetworkOrigin = /^http:\/\/(?:(?:localhost|127(?:\.\d{1,3}){3})|(?:10(?:\.\d{1,3}){3})|(?:192\.168(?:\.\d{1,3}){2})|(?:172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})):5173$/;
 const configuredFrontendOrigins = String(process.env.FRONTEND_ORIGINS || "")
@@ -26,6 +27,8 @@ const configuredFrontendOrigins = String(process.env.FRONTEND_ORIGINS || "")
 const allowedFrontendOrigins = new Set([
     "http://localservices.publicvm.com",
     "http://localservices.publicvm.com:5173",
+    "https://localservices.publicvm.com",
+    "https://www.localservices.publicvm.com",
     ...configuredFrontendOrigins
 ]);
 const allowLocalOrigins = (origin, callback) => {
@@ -50,6 +53,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.get("/health", (_req, res) => res.status(200).json({ status: "ok" }));
 
 // Existing routes
 app.use("/api/auth/signUp", signUp);
@@ -89,8 +93,8 @@ try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("DB is connected Successfully");
 
-    server.listen(3000, () => {
-        console.log("Backend is on port 3000");
+    server.listen(PORT, "0.0.0.0", () => {
+        console.log(`Backend is listening on 0.0.0.0:${PORT}`);
     });
 } catch (err) {
     console.log("Failed to connect to MongoDB:", err);
