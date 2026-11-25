@@ -24,8 +24,8 @@ const configuredFrontendOrigins = String(process.env.FRONTEND_ORIGINS || "")
     .map((origin) => origin.trim())
     .filter(Boolean);
 const allowedFrontendOrigins = new Set([
-    "http://13.233.158.137",
-    "http://13.233.158.137:5173",
+    "http://localservices.publicvm.com",
+    "http://localservices.publicvm.com:5173",
     ...configuredFrontendOrigins
 ]);
 const allowLocalOrigins = (origin, callback) => {
