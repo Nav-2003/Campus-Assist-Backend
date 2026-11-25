@@ -19,8 +19,17 @@ import forget from "./AUTH_HANDLER/forgetPassword.js";
 const app = express();
 
 const localNetworkOrigin = /^http:\/\/(?:(?:localhost|127(?:\.\d{1,3}){3})|(?:10(?:\.\d{1,3}){3})|(?:192\.168(?:\.\d{1,3}){2})|(?:172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})):5173$/;
+const configuredFrontendOrigins = String(process.env.FRONTEND_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+const allowedFrontendOrigins = new Set([
+    "http://13.233.158.137",
+    "http://13.233.158.137:5173",
+    ...configuredFrontendOrigins
+]);
 const allowLocalOrigins = (origin, callback) => {
-    if (!origin || localNetworkOrigin.test(origin)) return callback(null, true);
+    if (!origin || localNetworkOrigin.test(origin) || allowedFrontendOrigins.has(origin)) return callback(null, true);
     return callback(new Error("Origin is not allowed"));
 };
 
